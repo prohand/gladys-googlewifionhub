@@ -1,6 +1,6 @@
 {
   "name": "gladys-googlewifionhub",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "description": "Gladys Assistant external integration for Google Wifi, Nest Wifi and OnHub routers (local API + Google cloud).",
   "type": "module",

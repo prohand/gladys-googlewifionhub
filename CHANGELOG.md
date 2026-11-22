@@ -6,6 +6,8 @@ All notable changes to this integration are documented here. The format follows
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-11-22
+
 ### Added
 
 - First version of the Google Wifi / Nest Wifi / OnHub integration, built on the official
@@ -29,4 +31,5 @@ All notable changes to this integration are documented here. The format follows
 - CI (Prettier, ESLint, tests on Node 22 and 24, store checks, Docker build), multi-arch
   image build, Release and GitHub releases workflows.
 
-[Unreleased]: https://github.com/prohand/gladys-googlewifionhub/commits/main
+[Unreleased]: https://github.com/prohand/gladys-googlewifionhub/compare/v1.0.1...HEAD
+[1.0.1]: https://github.com/prohand/gladys-googlewifionhub/releases/tag/v1.0.1

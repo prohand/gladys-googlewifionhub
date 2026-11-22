@@ -8,8 +8,8 @@
     "de": "Überwache deinen Google Wifi-, Nest Wifi- oder OnHub-Router: Internet, Geräte, Speedtest.",
     "es": "Siga su router Google Wifi, Nest Wifi u OnHub: internet, dispositivos, velocidad, pausa."
   },
-  "version": "1.0.0",
-  "docker_image": "ghcr.io/prohand/gladys-googlewifionhub:1.0.0",
+  "version": "1.0.1",
+  "docker_image": "ghcr.io/prohand/gladys-googlewifionhub:1.0.1",
   "gladys_version": ">=5.3.0",
   "cover_image": "https://raw.githubusercontent.com/prohand/gladys-googlewifionhub/main/cover.png",
   "categories": ["network"],
@@ -506,7 +506,12 @@
           "key": "device",
           "type": "select",
           "source": "devices",
-          "label": { "en": "Device", "fr": "Appareil", "de": "Gerät", "es": "Dispositivo" },
+          "label": {
+            "en": "Device",
+            "fr": "Appareil",
+            "de": "Gerät",
+            "es": "Dispositivo"
+          },
           "required": true
         },
         {
@@ -525,7 +530,12 @@
         {
           "key": "paused",
           "type": "boolean",
-          "label": { "en": "Paused", "fr": "En pause", "de": "Pausiert", "es": "En pausa" }
+          "label": {
+            "en": "Paused",
+            "fr": "En pause",
+            "de": "Pausiert",
+            "es": "En pausa"
+          }
         }
       ]
     },
