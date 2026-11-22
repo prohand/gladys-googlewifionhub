@@ -1,0 +1,695 @@
+{
+  "manifest_version": 1,
+  "type": "device",
+  "name": "Google Wifi / OnHub",
+  "description": {
+    "en": "Follow your Google Wifi, Nest Wifi or OnHub router: internet, devices, speed test, pause.",
+    "fr": "Suivez votre routeur Google Wifi, Nest Wifi ou OnHub : internet, appareils, débit, pause.",
+    "de": "Überwache deinen Google Wifi-, Nest Wifi- oder OnHub-Router: Internet, Geräte, Speedtest.",
+    "es": "Siga su router Google Wifi, Nest Wifi u OnHub: internet, dispositivos, velocidad, pausa."
+  },
+  "version": "1.0.0",
+  "docker_image": "ghcr.io/prohand/gladys-googlewifionhub:1.0.0",
+  "gladys_version": ">=5.3.0",
+  "cover_image": "https://raw.githubusercontent.com/prohand/gladys-googlewifionhub/main/cover.png",
+  "categories": ["network"],
+  "keywords": [
+    "google wifi",
+    "nest wifi",
+    "onhub",
+    "google nest",
+    "mesh",
+    "routeur",
+    "router",
+    "tp-link onhub",
+    "asus onhub",
+    "speed test"
+  ],
+  "countries": [
+    "US",
+    "CA",
+    "GB",
+    "IE",
+    "FR",
+    "BE",
+    "DE",
+    "AT",
+    "CH",
+    "ES",
+    "IT",
+    "NL",
+    "SE",
+    "DK",
+    "NO",
+    "FI",
+    "AU",
+    "NZ",
+    "JP",
+    "IN"
+  ],
+  "transports": ["local", "cloud"],
+  "config_schema": [
+    {
+      "key": "intro",
+      "type": "section",
+      "label": {
+        "en": "Getting started",
+        "fr": "Pour commencer",
+        "de": "Erste Schritte",
+        "es": "Primeros pasos"
+      },
+      "description": {
+        "en": "Two ways to reach your Wi-Fi, usable together. Local: the router's own status page on your network, no account needed (internet state, firmware, uptime). Google cloud: with a Google refresh token, the connected devices, live throughput, speed test, internet pause and restart.",
+        "fr": "Deux façons de joindre votre Wi-Fi, utilisables ensemble. Local : la page d'état du routeur sur votre réseau, sans compte (état internet, firmware, durée d'allumage). Cloud Google : avec un jeton Google (refresh token), les appareils connectés, le débit en direct, le test de débit, la pause internet et le redémarrage.",
+        "de": "Zwei Wege zu deinem WLAN, auch gemeinsam nutzbar. Lokal: die Statusseite des Routers in deinem Netzwerk, ohne Konto (Internetstatus, Firmware, Laufzeit). Google-Cloud: mit einem Google-Refresh-Token die verbundenen Geräte, Live-Durchsatz, Speedtest, Internetpause und Neustart.",
+        "es": "Dos formas de acceder a su Wi-Fi, utilizables juntas. Local: la página de estado del router en su red, sin cuenta (estado de internet, firmware, tiempo encendido). Nube de Google: con un token de Google (refresh token), los dispositivos conectados, el caudal en directo, el test de velocidad, la pausa de internet y el reinicio."
+      },
+      "links": [
+        {
+          "url": "https://github.com/prohand/gladys-googlewifionhub/blob/main/docs/en.md",
+          "label": {
+            "en": "Integration documentation",
+            "fr": "Documentation de l'intégration",
+            "de": "Dokumentation der Integration",
+            "es": "Documentación de la integración"
+          }
+        }
+      ]
+    },
+    {
+      "key": "router_host",
+      "type": "string",
+      "label": {
+        "en": "Router address (local)",
+        "fr": "Adresse du routeur (local)",
+        "de": "Router-Adresse (lokal)",
+        "es": "Dirección del router (local)"
+      },
+      "description": {
+        "en": "IP address of the main Wi-Fi point, the one plugged into your box. 192.168.86.1 on a Google Wifi network left at its factory settings. Leave empty to disable the local channel.",
+        "fr": "Adresse IP du point Wi-Fi principal, celui branché à votre box. 192.168.86.1 sur un réseau Google Wifi resté en réglages d'usine. Laissez vide pour désactiver le canal local.",
+        "de": "IP-Adresse des WLAN-Hauptpunkts, der an deinem Modem hängt. 192.168.86.1 bei einem Google Wifi-Netz mit Werkseinstellungen. Leer lassen, um den lokalen Kanal zu deaktivieren.",
+        "es": "Dirección IP del punto Wi-Fi principal, el conectado a su router de operador. 192.168.86.1 en una red Google Wifi con los ajustes de fábrica. Déjelo vacío para desactivar el canal local."
+      },
+      "placeholder": {
+        "en": "e.g. 192.168.86.1",
+        "fr": "ex. 192.168.86.1",
+        "de": "z. B. 192.168.86.1",
+        "es": "p. ej. 192.168.86.1"
+      },
+      "required": false,
+      "default": "192.168.86.1"
+    },
+    {
+      "key": "cloud",
+      "type": "section",
+      "label": {
+        "en": "Google cloud (optional)",
+        "fr": "Cloud Google (facultatif)",
+        "de": "Google-Cloud (optional)",
+        "es": "Nube de Google (opcional)"
+      },
+      "description": {
+        "en": "The cloud channel uses the unofficial Google API of the Google Home app. It needs a refresh token of the Google account that manages the Wi-Fi: the documentation explains how to get one. The token stays in Gladys and is only sent to Google.",
+        "fr": "Le canal cloud utilise l'API Google non officielle de l'application Google Home. Il faut un jeton (refresh token) du compte Google qui gère le Wi-Fi : la documentation explique comment l'obtenir. Le jeton reste dans Gladys et n'est envoyé qu'à Google.",
+        "de": "Der Cloud-Kanal nutzt die inoffizielle Google-API der Google Home-App. Er braucht ein Refresh-Token des Google-Kontos, das das WLAN verwaltet: Die Dokumentation erklärt, wie du es bekommst. Das Token bleibt in Gladys und wird nur an Google gesendet.",
+        "es": "El canal en la nube usa la API no oficial de Google de la app Google Home. Necesita un token (refresh token) de la cuenta de Google que gestiona el Wi-Fi: la documentación explica cómo obtenerlo. El token se queda en Gladys y solo se envía a Google."
+      }
+    },
+    {
+      "key": "refresh_token",
+      "type": "secret",
+      "label": {
+        "en": "Google refresh token",
+        "fr": "Jeton Google (refresh token)",
+        "de": "Google-Refresh-Token",
+        "es": "Token de Google (refresh token)"
+      },
+      "description": {
+        "en": "Leave empty to use the local channel only.",
+        "fr": "Laissez vide pour n'utiliser que le canal local.",
+        "de": "Leer lassen, um nur den lokalen Kanal zu nutzen.",
+        "es": "Déjelo vacío para usar solo el canal local."
+      },
+      "placeholder": {
+        "en": "1//0…",
+        "fr": "1//0…",
+        "de": "1//0…",
+        "es": "1//0…"
+      },
+      "required": false
+    },
+    {
+      "key": "publish_clients",
+      "type": "boolean",
+      "label": {
+        "en": "Show the connected devices in Discovery",
+        "fr": "Afficher les appareils connectés dans la découverte",
+        "de": "Verbundene Geräte in der Erkennung anzeigen",
+        "es": "Mostrar los dispositivos conectados en el descubrimiento"
+      },
+      "description": {
+        "en": "Cloud only. Each phone, computer or TV on the Wi-Fi can then be added to Gladys: presence, throughput and internet pause.",
+        "fr": "Cloud uniquement. Chaque téléphone, ordinateur ou TV du Wi-Fi peut alors être ajouté à Gladys : présence, débit et pause internet.",
+        "de": "Nur Cloud. Jedes Handy, jeder Computer oder Fernseher im WLAN kann dann zu Gladys hinzugefügt werden: Anwesenheit, Durchsatz, Internetpause.",
+        "es": "Solo nube. Cada móvil, ordenador o TV del Wi-Fi se puede añadir a Gladys: presencia, caudal y pausa de internet."
+      },
+      "required": false,
+      "default": true
+    },
+    {
+      "key": "poll_frequency",
+      "type": "number",
+      "label": {
+        "en": "Refresh interval (s)",
+        "fr": "Intervalle de rafraîchissement (s)",
+        "de": "Aktualisierungsintervall (s)",
+        "es": "Intervalo de actualización (s)"
+      },
+      "description": {
+        "en": "How often the router is read, in seconds (30 to 3600).",
+        "fr": "Fréquence de lecture du routeur, en secondes (30 à 3600).",
+        "de": "Wie oft der Router gelesen wird, in Sekunden (30 bis 3600).",
+        "es": "Frecuencia de lectura del router, en segundos (30 a 3600)."
+      },
+      "required": false,
+      "default": 60,
+      "min": 30,
+      "max": 3600
+    }
+  ],
+  "actions": [
+    {
+      "key": "test_connection",
+      "label": {
+        "en": "Test the connection",
+        "fr": "Tester la connexion",
+        "de": "Verbindung testen",
+        "es": "Probar la conexión"
+      },
+      "description": {
+        "en": "Read the router on the LAN and the Google cloud now.",
+        "fr": "Lit maintenant le routeur sur le réseau local et le cloud Google.",
+        "de": "Liest jetzt den Router im LAN und die Google-Cloud.",
+        "es": "Lee ahora el router en la red local y la nube de Google."
+      },
+      "timeout_seconds": 45
+    },
+    {
+      "key": "run_speed_test",
+      "label": {
+        "en": "Run a speed test",
+        "fr": "Lancer un test de débit",
+        "de": "Speedtest starten",
+        "es": "Hacer un test de velocidad"
+      },
+      "description": {
+        "en": "Cloud only. Measures the internet speed from the router (about a minute).",
+        "fr": "Cloud uniquement. Mesure le débit internet depuis le routeur (environ une minute).",
+        "de": "Nur Cloud. Misst die Internetgeschwindigkeit am Router (etwa eine Minute).",
+        "es": "Solo nube. Mide la velocidad de internet desde el router (alrededor de un minuto)."
+      },
+      "timeout_seconds": 120
+    },
+    {
+      "key": "restart_wifi",
+      "label": {
+        "en": "Restart the Wi-Fi",
+        "fr": "Redémarrer le Wi-Fi",
+        "de": "WLAN neu starten",
+        "es": "Reiniciar el Wi-Fi"
+      },
+      "description": {
+        "en": "Cloud only. Restarts every Wi-Fi point: no network for a few minutes, Gladys included if it uses the Wi-Fi.",
+        "fr": "Cloud uniquement. Redémarre tous les points Wi-Fi : plus de réseau pendant quelques minutes, Gladys compris s'il passe par le Wi-Fi.",
+        "de": "Nur Cloud. Startet alle WLAN-Punkte neu: einige Minuten kein Netzwerk, auch für Gladys, wenn es das WLAN nutzt.",
+        "es": "Solo nube. Reinicia todos los puntos Wi-Fi: sin red durante unos minutos, Gladys incluido si usa el Wi-Fi."
+      },
+      "timeout_seconds": 30,
+      "fields": [
+        {
+          "key": "confirm",
+          "type": "boolean",
+          "label": {
+            "en": "I understand the network will be cut",
+            "fr": "Je comprends que le réseau sera coupé",
+            "de": "Mir ist klar, dass das Netzwerk getrennt wird",
+            "es": "Entiendo que la red se cortará"
+          },
+          "required": true,
+          "default": false
+        }
+      ]
+    }
+  ],
+  "scene_triggers": [
+    {
+      "key": "internet_lost",
+      "label": {
+        "en": "Internet lost",
+        "fr": "Internet coupé",
+        "de": "Internet weg",
+        "es": "Internet perdido"
+      },
+      "description": {
+        "en": "The router reports that the internet connection dropped.",
+        "fr": "Le routeur signale que la connexion internet est tombée.",
+        "de": "Der Router meldet, dass die Internetverbindung abgebrochen ist.",
+        "es": "El router indica que la conexión a internet se ha caído."
+      },
+      "variables": [
+        {
+          "key": "source",
+          "type": "string",
+          "label": {
+            "en": "Read from (local / cloud)",
+            "fr": "Lu sur (local / cloud)",
+            "de": "Gelesen über (lokal / Cloud)",
+            "es": "Leído en (local / nube)"
+          }
+        }
+      ]
+    },
+    {
+      "key": "internet_restored",
+      "label": {
+        "en": "Internet restored",
+        "fr": "Internet rétabli",
+        "de": "Internet wieder da",
+        "es": "Internet restablecido"
+      },
+      "description": {
+        "en": "The internet connection is back after an outage.",
+        "fr": "La connexion internet est revenue après une coupure.",
+        "de": "Die Internetverbindung ist nach einem Ausfall wieder da.",
+        "es": "La conexión a internet ha vuelto tras un corte."
+      },
+      "variables": [
+        {
+          "key": "source",
+          "type": "string",
+          "label": {
+            "en": "Read from (local / cloud)",
+            "fr": "Lu sur (local / cloud)",
+            "de": "Gelesen über (lokal / Cloud)",
+            "es": "Leído en (local / nube)"
+          }
+        },
+        {
+          "key": "offline_minutes",
+          "type": "number",
+          "label": {
+            "en": "Outage length (minutes)",
+            "fr": "Durée de la coupure (minutes)",
+            "de": "Dauer des Ausfalls (Minuten)",
+            "es": "Duración del corte (minutos)"
+          }
+        }
+      ]
+    },
+    {
+      "key": "client_connected",
+      "label": {
+        "en": "Device joined the Wi-Fi",
+        "fr": "Appareil connecté au Wi-Fi",
+        "de": "Gerät mit WLAN verbunden",
+        "es": "Dispositivo conectado al Wi-Fi"
+      },
+      "description": {
+        "en": "A phone, computer or other device connected to the Wi-Fi (cloud).",
+        "fr": "Un téléphone, un ordinateur ou un autre appareil s'est connecté au Wi-Fi (cloud).",
+        "de": "Ein Handy, Computer oder anderes Gerät hat sich mit dem WLAN verbunden (Cloud).",
+        "es": "Un móvil, un ordenador u otro dispositivo se ha conectado al Wi-Fi (nube)."
+      },
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Device (empty = any)",
+            "fr": "Appareil (vide = tous)",
+            "de": "Gerät (leer = alle)",
+            "es": "Dispositivo (vacío = todos)"
+          }
+        }
+      ],
+      "variables": [
+        {
+          "key": "name",
+          "type": "string",
+          "label": {
+            "en": "Device name",
+            "fr": "Nom de l'appareil",
+            "de": "Gerätename",
+            "es": "Nombre del dispositivo"
+          }
+        },
+        {
+          "key": "ip",
+          "type": "string",
+          "label": {
+            "en": "IP address",
+            "fr": "Adresse IP",
+            "de": "IP-Adresse",
+            "es": "Dirección IP"
+          }
+        }
+      ]
+    },
+    {
+      "key": "client_disconnected",
+      "label": {
+        "en": "Device left the Wi-Fi",
+        "fr": "Appareil déconnecté du Wi-Fi",
+        "de": "Gerät hat WLAN verlassen",
+        "es": "Dispositivo desconectado del Wi-Fi"
+      },
+      "description": {
+        "en": "A device of the Wi-Fi disconnected (cloud).",
+        "fr": "Un appareil du Wi-Fi s'est déconnecté (cloud).",
+        "de": "Ein Gerät im WLAN hat sich getrennt (Cloud).",
+        "es": "Un dispositivo del Wi-Fi se ha desconectado (nube)."
+      },
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Device (empty = any)",
+            "fr": "Appareil (vide = tous)",
+            "de": "Gerät (leer = alle)",
+            "es": "Dispositivo (vacío = todos)"
+          }
+        }
+      ],
+      "variables": [
+        {
+          "key": "name",
+          "type": "string",
+          "label": {
+            "en": "Device name",
+            "fr": "Nom de l'appareil",
+            "de": "Gerätename",
+            "es": "Nombre del dispositivo"
+          }
+        },
+        {
+          "key": "ip",
+          "type": "string",
+          "label": {
+            "en": "IP address",
+            "fr": "Adresse IP",
+            "de": "IP-Adresse",
+            "es": "Dirección IP"
+          }
+        }
+      ]
+    },
+    {
+      "key": "access_point_offline",
+      "label": {
+        "en": "Wi-Fi point offline",
+        "fr": "Point Wi-Fi hors ligne",
+        "de": "WLAN-Punkt offline",
+        "es": "Punto Wi-Fi sin conexión"
+      },
+      "description": {
+        "en": "A router or Wi-Fi point stopped answering (cloud).",
+        "fr": "Un routeur ou point Wi-Fi ne répond plus (cloud).",
+        "de": "Ein Router oder WLAN-Punkt antwortet nicht mehr (Cloud).",
+        "es": "Un router o punto Wi-Fi ha dejado de responder (nube)."
+      },
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Wi-Fi point (empty = any)",
+            "fr": "Point Wi-Fi (vide = tous)",
+            "de": "WLAN-Punkt (leer = alle)",
+            "es": "Punto Wi-Fi (vacío = todos)"
+          }
+        }
+      ],
+      "variables": [
+        {
+          "key": "name",
+          "type": "string",
+          "label": {
+            "en": "Point name",
+            "fr": "Nom du point",
+            "de": "Name des Punkts",
+            "es": "Nombre del punto"
+          }
+        }
+      ]
+    },
+    {
+      "key": "update_available",
+      "label": {
+        "en": "Router update available",
+        "fr": "Mise à jour du routeur disponible",
+        "de": "Router-Update verfügbar",
+        "es": "Actualización del router disponible"
+      },
+      "description": {
+        "en": "The router announces a new firmware (local).",
+        "fr": "Le routeur annonce un nouveau firmware (local).",
+        "de": "Der Router meldet eine neue Firmware (lokal).",
+        "es": "El router anuncia un nuevo firmware (local)."
+      },
+      "variables": [
+        {
+          "key": "current_version",
+          "type": "string",
+          "label": {
+            "en": "Current version",
+            "fr": "Version actuelle",
+            "de": "Aktuelle Version",
+            "es": "Versión actual"
+          }
+        },
+        {
+          "key": "new_version",
+          "type": "string",
+          "label": {
+            "en": "New version",
+            "fr": "Nouvelle version",
+            "de": "Neue Version",
+            "es": "Nueva versión"
+          }
+        }
+      ]
+    }
+  ],
+  "scene_actions": [
+    {
+      "key": "pause_client",
+      "label": {
+        "en": "Pause a device's internet",
+        "fr": "Mettre en pause l'internet d'un appareil",
+        "de": "Internet eines Geräts pausieren",
+        "es": "Pausar el internet de un dispositivo"
+      },
+      "description": {
+        "en": "Cloud. Pauses or resumes the internet of one device of the Wi-Fi.",
+        "fr": "Cloud. Met en pause ou rétablit l'internet d'un appareil du Wi-Fi.",
+        "de": "Cloud. Pausiert oder aktiviert das Internet eines Geräts im WLAN.",
+        "es": "Nube. Pausa o reanuda el internet de un dispositivo del Wi-Fi."
+      },
+      "timeout_seconds": 30,
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": { "en": "Device", "fr": "Appareil", "de": "Gerät", "es": "Dispositivo" },
+          "required": true
+        },
+        {
+          "key": "paused",
+          "type": "boolean",
+          "label": {
+            "en": "Pause (unticked = resume)",
+            "fr": "Pause (décoché = rétablir)",
+            "de": "Pausieren (aus = fortsetzen)",
+            "es": "Pausar (desmarcado = reanudar)"
+          },
+          "default": true
+        }
+      ],
+      "outputs": [
+        {
+          "key": "paused",
+          "type": "boolean",
+          "label": { "en": "Paused", "fr": "En pause", "de": "Pausiert", "es": "En pausa" }
+        }
+      ]
+    },
+    {
+      "key": "run_speed_test",
+      "label": {
+        "en": "Run a speed test",
+        "fr": "Lancer un test de débit",
+        "de": "Speedtest starten",
+        "es": "Hacer un test de velocidad"
+      },
+      "description": {
+        "en": "Cloud. Measures the internet speed from the router (about a minute).",
+        "fr": "Cloud. Mesure le débit internet depuis le routeur (environ une minute).",
+        "de": "Cloud. Misst die Internetgeschwindigkeit am Router (etwa eine Minute).",
+        "es": "Nube. Mide la velocidad de internet desde el router (alrededor de un minuto)."
+      },
+      "timeout_seconds": 120,
+      "outputs": [
+        {
+          "key": "download_mbps",
+          "type": "number",
+          "label": {
+            "en": "Download (Mb/s)",
+            "fr": "Descente (Mb/s)",
+            "de": "Download (Mbit/s)",
+            "es": "Bajada (Mb/s)"
+          }
+        },
+        {
+          "key": "upload_mbps",
+          "type": "number",
+          "label": {
+            "en": "Upload (Mb/s)",
+            "fr": "Montée (Mb/s)",
+            "de": "Upload (Mbit/s)",
+            "es": "Subida (Mb/s)"
+          }
+        }
+      ]
+    },
+    {
+      "key": "restart_wifi",
+      "label": {
+        "en": "Restart the Wi-Fi",
+        "fr": "Redémarrer le Wi-Fi",
+        "de": "WLAN neu starten",
+        "es": "Reiniciar el Wi-Fi"
+      },
+      "description": {
+        "en": "Cloud. Restarts one Wi-Fi point, or every point when none is chosen.",
+        "fr": "Cloud. Redémarre un point Wi-Fi, ou tous les points si aucun n'est choisi.",
+        "de": "Cloud. Startet einen WLAN-Punkt neu, oder alle, wenn keiner gewählt ist.",
+        "es": "Nube. Reinicia un punto Wi-Fi, o todos si no se elige ninguno."
+      },
+      "timeout_seconds": 30,
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Wi-Fi point (empty = all)",
+            "fr": "Point Wi-Fi (vide = tous)",
+            "de": "WLAN-Punkt (leer = alle)",
+            "es": "Punto Wi-Fi (vacío = todos)"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "key": "restarted",
+          "type": "boolean",
+          "label": {
+            "en": "Restart requested",
+            "fr": "Redémarrage demandé",
+            "de": "Neustart angefordert",
+            "es": "Reinicio solicitado"
+          }
+        }
+      ]
+    },
+    {
+      "key": "check_internet",
+      "label": {
+        "en": "Check the internet",
+        "fr": "Vérifier internet",
+        "de": "Internet prüfen",
+        "es": "Comprobar internet"
+      },
+      "description": {
+        "en": "Reads the router now. Use the outputs in a condition of the scene.",
+        "fr": "Lit le routeur maintenant. Utilisez les sorties dans une condition de la scène.",
+        "de": "Liest jetzt den Router. Nutze die Ausgaben in einer Bedingung der Szene.",
+        "es": "Lee el router ahora. Use las salidas en una condición de la escena."
+      },
+      "timeout_seconds": 45,
+      "outputs": [
+        {
+          "key": "online",
+          "type": "boolean",
+          "label": {
+            "en": "Internet up",
+            "fr": "Internet OK",
+            "de": "Internet OK",
+            "es": "Internet OK"
+          }
+        },
+        {
+          "key": "source",
+          "type": "string",
+          "label": {
+            "en": "Read from (local / cloud)",
+            "fr": "Lu sur (local / cloud)",
+            "de": "Gelesen über (lokal / Cloud)",
+            "es": "Leído en (local / nube)"
+          }
+        },
+        {
+          "key": "connected_clients",
+          "type": "number",
+          "label": {
+            "en": "Connected devices",
+            "fr": "Appareils connectés",
+            "de": "Verbundene Geräte",
+            "es": "Dispositivos conectados"
+          }
+        }
+      ]
+    }
+  ],
+  "widgets": [
+    {
+      "key": "wifi_status",
+      "label": {
+        "en": "Wi-Fi status",
+        "fr": "État du Wi-Fi",
+        "de": "WLAN-Status",
+        "es": "Estado del Wi-Fi"
+      },
+      "description": {
+        "en": "Internet, firmware, uptime, Wi-Fi points, live throughput and speed test.",
+        "fr": "Internet, firmware, durée d'allumage, points Wi-Fi, débit en direct et test de débit.",
+        "de": "Internet, Firmware, Laufzeit, WLAN-Punkte, Live-Durchsatz und Speedtest.",
+        "es": "Internet, firmware, tiempo encendido, puntos Wi-Fi, caudal en directo y test de velocidad."
+      },
+      "icon": "wifi",
+      "action_timeout_seconds": 120
+    },
+    {
+      "key": "wifi_clients",
+      "label": {
+        "en": "Wi-Fi devices",
+        "fr": "Appareils du Wi-Fi",
+        "de": "WLAN-Geräte",
+        "es": "Dispositivos del Wi-Fi"
+      },
+      "description": {
+        "en": "The devices connected to the Wi-Fi right now, busiest first (cloud).",
+        "fr": "Les appareils connectés au Wi-Fi en ce moment, les plus actifs d'abord (cloud).",
+        "de": "Die gerade mit dem WLAN verbundenen Geräte, die aktivsten zuerst (Cloud).",
+        "es": "Los dispositivos conectados al Wi-Fi ahora mismo, los más activos primero (nube)."
+      },
+      "icon": "smartphone"
+    }
+  ]
+}
